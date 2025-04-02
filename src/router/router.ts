@@ -10,14 +10,12 @@ const router = createRouter({
       children: [],
     },
     {
-      path: '/login',
-      component: () => import('@/views/Login.vue'),
+      path: '/broadcasts',
+      component: () => import('@/views/Broadcasts.vue'),
     },
     {
-      path: '/pokemon/:id',
-      name: 'PokemonDetails',
-      component: () => import('@/views/Pokemon.vue'),
-      props: true,
+      path: '/login',
+      component: () => import('@/views/Login.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

@@ -1,21 +1,21 @@
 <template>
-  <v-card :key="pokemon.name" class="pokemon-card">
+  <v-card :key="pokemon.name" variant="elevated" rounded="xl">
     <v-img :src="pokemon.sprite" height="200"></v-img>
-    <v-card-title>{{ pokemon.name }}</v-card-title>
+    <v-card-title>{{ capitalize(pokemon.name) }}</v-card-title>
     <v-card-actions>
       <v-btn color="primary" :prepend-icon="like ? 'mdi-heart' : 'mdi-heart-outline'" @click="onLike(pokemon.name)"
         class="like-btn">{{ likesAmount }}</v-btn>
-      <v-btn color="primary" icon="mdi-message-text-outline" class="comment-btn" @click="onComment(pokemon.id)"></v-btn>
-      <v-btn color="primary" icon="mdi-share-variant" class="share-btn"></v-btn>
+      <comments-modal />
+      <broadcast-modal />
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getLikes, getLikeByUser } from '@/services/likeApi'
 import type { PokemonDetails } from '@/interfaces/pokemon'
-import router from '@/router/router';
+import CommentsModal from './CommentsModal.vue';
+import BroadcastModal from './BroadcastModal.vue';
 
 const props = defineProps<{ pokemon: PokemonDetails }>()
 const like = ref(false)
@@ -34,8 +34,8 @@ const onLike = (name: string) => {
   likesAmount.value += like.value ? 1 : -1
 }
 
-const onComment = (id: string) => {
-  router.push({ name: 'PokemonDetails', params: { id } })
+const capitalize = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 
