@@ -1,6 +1,7 @@
 <template>
   <v-card border="md" rounded="xl">
-    <v-card-title>{{ broadcast.title }}</v-card-title>
+    <v-card-title>{{ broadcast.title }}
+    </v-card-title>
     <v-card-text>{{ broadcast.description }}</v-card-text>
     <v-card-actions>
       <v-list-item class="w-100">
@@ -11,6 +12,7 @@
             <v-btn prepend-icon="mdi-thumb-up-outline" class="like-btn">{{ broadcast.likes }}</v-btn>
             <v-btn prepend-icon="mdi-thumb-down-outline" class="like-btn">{{ broadcast.dislikes }}</v-btn>
             <v-btn icon="mdi-message-text-outline" @click="showComments"></v-btn>
+            <v-btn v-if="checkCreationTime" icon="mdi-pencil-outline"></v-btn>
           </div>
         </template>
       </v-list-item>
@@ -18,8 +20,7 @@
   </v-card>
   <v-list v-if="commentActive">
     <v-list-item v-for="comment in broadcast.comments" :key="comment.id">
-      <v-list-item-title>{{ comment.username }}</v-list-item-title>
-      <v-list-item-subtitle>{{ comment.text }}</v-list-item-subtitle>
+      <broadcast-comment :comment="comment"></broadcast-comment>
     </v-list-item>
     <v-list-item>
       <v-text-field v-model="newComment" :rules="[rules.required, rules.max]"
@@ -35,6 +36,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type Broadcast from '@/interfaces/broadcast';
+import BroadcastComment from './BroadcastComment.vue';
 
 const commentActive = ref(false)
 const newComment = ref('')
@@ -84,6 +86,9 @@ const addComment = () => {
 const getDateTime = (date: Date) => {
   return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
 }
+
+const checkCreationTime = new Date().getTime() - broadcast.createdAt.getTime() < 3600000
+
 </script>
 
 <style scoped></style>

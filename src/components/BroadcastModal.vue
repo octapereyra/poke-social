@@ -11,13 +11,14 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text="Cancelar" variant="plain" @click="dialog = false"></v-btn>
-        <v-btn color="primary" text="Compartir" variant="tonal" @click="dialog = false"></v-btn>
+        <v-btn color="primary" text="Compartir" variant="tonal" @click="onSubmit"></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
+import router from '@/router/router';
 import { ref, shallowRef } from 'vue';
 const dialog = shallowRef(false);
 
@@ -26,6 +27,13 @@ const broadcast = ref();
 broadcast.value = {
   title: '',
   description: '',
+}
+
+const onSubmit = () => {
+  console.log(broadcast.value);
+  dialog.value = false;
+
+  router.push('/broadcasts');
 }
 
 </script>
