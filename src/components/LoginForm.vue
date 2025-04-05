@@ -7,9 +7,9 @@
             Iniciar Sesión
           </v-card-title>
           <v-form @submit.prevent="login" ref="form">
-            <v-text-field v-model="username" label="Nombre de usuario" type="text" :rules="usernameValidation" required
-              variant="outlined" class="mb-4"></v-text-field>
-            <v-text-field v-model="avatar" label="Avatar" type="text" :rules="avatarValidation" required
+            <v-text-field v-model="username" label="Nombre de usuario" type="text" :rules="[rules.usernameValidation]"
+              required variant="outlined" class="mb-4"></v-text-field>
+            <v-text-field v-model="avatar" label="Avatar" type="text" :rules="[rules.avatarValidation]" required
               variant="outlined" class="mb-6"></v-text-field>
             <v-btn type="submit" color="primary" block size="large" :disabled="loading">
               Ingresar
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import router from '@/router/router'
+import rules from '@/utils/rules'
 import { ref } from 'vue'
 import type { VForm } from 'vuetify/components'
 
@@ -31,16 +32,6 @@ const username = ref('')
 const avatar = ref('')
 const loading = ref(false)
 const form = ref<typeof VForm | null>(null)
-
-// Reglas de validación
-const usernameValidation = [
-  (v: string) => !!v || 'El nombre de usuario es requerido',
-]
-
-const avatarValidation = [
-  (v: string) => !!v || 'El avatar es requerido',
-  (v: string) => v.length >= 6 || 'La contraseña debe tener al menos 6 caracteres'
-]
 
 // Método de login
 const login = async () => {

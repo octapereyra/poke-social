@@ -1,22 +1,22 @@
 <template>
   <v-dialog max-width="500">
-    <template v-slot:activator="{ props: activatorProps }">
-      <v-btn v-bind="activatorProps" color="primary" icon="mdi-message-text-outline"></v-btn>
+    <template #activator="{ props: activatorProps }">
+      <v-btn v-bind="activatorProps" :color="btnColor" :variant="btnVariant" icon="mdi-message-text-outline"></v-btn>
     </template>
 
-    <template v-slot:default="{ isActive }">
+    <template #default="{ isActive }">
       <v-card>
         <v-card-title>Comentarios</v-card-title>
         <v-card-text>
           <v-list lines="two">
             <v-list-item v-for="comment in comments" :key="comment.id" :title="comment.username" variant="elevated"
               base-color="yellow" rounded="xl" class="my-1">
-              <template v-slot:prepend>
+              <template #prepend>
                 <v-avatar>
                   <v-img :src="comment.avatar"></v-img>
                 </v-avatar>
               </template>
-              <template v-slot:append v-if="comment.username === username">
+              <template #append v-if="comment.username === username">
                 <v-btn icon="mdi-pencil-outline" variant="elevated" size="small" @click="onEdit(comment.id)"
                   class="mx-1"></v-btn>
                 <v-btn icon="mdi-trash-can-outline" variant="elevated" size="small"
@@ -39,15 +39,14 @@
 
 <script setup lang="ts">
 import type Commentary from '@/interfaces/commentary'
+import rules from '@/utils/rules'
 import { ref } from 'vue'
 
+const props = defineProps<{
+  btnColor: string,
+  btnVariant: "flat" | "tonal" | "elevated" | undefined,
+}>()
 const comments = ref([] as Commentary[])
-
-const rules = {
-  required: (value: string) => !!value || 'Este campo es requerido',
-  max: (value: string) => value.length <= 500 || 'Máximo de 500 caracteres',
-}
-
 const newComment = ref()
 
 const addComment = () => {

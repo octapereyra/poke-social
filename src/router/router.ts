@@ -7,11 +7,16 @@ const router = createRouter({
     {
       path: '/',
       component: Index,
-      children: [],
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/broadcasts',
       component: () => import('@/views/Broadcasts.vue'),
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/login',
@@ -22,6 +27,18 @@ const router = createRouter({
       redirect: '/',
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('username')
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login')
+  } else if (to.path === '/login' && isAuthenticated) {
+    next('/dashboard')
+  } else {
+    next()
+  }
 })
 
 export default router

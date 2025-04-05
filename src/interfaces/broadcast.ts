@@ -1,5 +1,5 @@
-export default interface Broadcast {
-  id: string
+interface Broadcast {
+  id?: string
   title: string
   description: string
   pokemonId: number
@@ -7,14 +7,16 @@ export default interface Broadcast {
   createdAt: Date
   likes: number
   dislikes: number
-  comments: [
-    {
-      id: string
-      text: string
-      username: string
-      createdAt: Date
-      likes: number
-      dislikes: number
-    },
-  ]
+  comments: BroadcastComment[]
 }
+
+interface BroadcastComment {
+  id: string
+  text: string
+  username: string
+  createdAt: Date
+  likes: number
+  dislikes: number
+}
+
+export type { Broadcast, BroadcastComment }

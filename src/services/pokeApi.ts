@@ -12,7 +12,7 @@ const getPokemons = async (): Promise<PokemonDetails[]> => {
       pokemonList.map(async (pokemon) => {
         const details = await axios.get(pokemon.url)
         return {
-          id: pokemon.url.split('/')[6],
+          id: parseInt(pokemon.url.split('/')[6], 10),
           name: details.data.name,
           sprite: details.data.sprites.front_default,
         }
@@ -30,7 +30,7 @@ const getPokemon = async (id: string): Promise<PokemonDetails | null> => {
   try {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
     return {
-      id,
+      id: parseInt(id, 10),
       name: response.data.name,
       sprite: response.data.sprites.front_default,
     }

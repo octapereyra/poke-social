@@ -1,36 +1,46 @@
 import type Mock from '@/interfaces/mock'
 import axios from 'axios'
+import { getMockPokemonsByUser } from './mockApi'
 
-const getLikeByUser = async (pokemonId: string, userId: string): Promise<boolean> => {
+const getLikeByUser = async (pokemonId: number, userId: string): Promise<boolean> => {
   try {
-    const response = await axios.get<Mock>(
-      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/ojpapp?pokemonId=${pokemonId}&userId=${userId}`,
+    const response = await axios.get<Mock[]>(
+      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon?app=ojpapp&pokemonId=${pokemonId}&userId=${userId}`,
     )
-    return response.data.liked
+    return response.data.length > 0 ? response.data[0].liked : false
   } catch (error) {
     console.error('Error fetching Pokémon:', error)
     return false
   }
 }
 
-const getLikes = async (pokemonId: string): Promise<number> => {
+const getLikesByPokeId = async (pokemonId: number): Promise<number> => {
   try {
     const response = await axios.get<Mock[]>(
-      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/ojpapp?pokemonId=${pokemonId}&liked=true`,
+      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon?app=ojpapp&pokemonId=${pokemonId}&liked=true`,
     )
-    return response.data.length
+    return response.data.length > 0 ? response.data.length : 0
   } catch (error) {
     console.error('Error fetching Pokémon:', error)
     return 0
   }
 }
 
-const setLike = async (id: string, liked: boolean): Promise<void> => {
+const setPokemonLike = async (id: number, liked: boolean): Promise<void> => {
   try {
-    await axios.put(`https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/${id}`, { liked })
+    const pokemonsId = await getMockPokemonsByUser(localStorage.getItem('username') || '')
+    if (pokemonsId.includes(id)) {
+      await axios.put(`https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/${id}`, { liked })
+    } else {
+      await axios.post('https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon', {
+        pokemonId: id,
+        liked,
+        userId: localStorage.getItem('username'),
+      })
+    }
   } catch (error) {
     console.error('Error fetching Pokémon:', error)
   }
 }
 
-export { getLikes, getLikeByUser, setLike }
+export { getLikesByPokeId, getLikeByUser, setPokemonLike }

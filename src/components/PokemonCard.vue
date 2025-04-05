@@ -5,8 +5,8 @@
     <v-card-actions>
       <v-btn color="primary" :prepend-icon="like ? 'mdi-heart' : 'mdi-heart-outline'" @click="onLike(pokemon.name)"
         class="like-btn">{{ likesAmount }}</v-btn>
-      <comments-modal />
-      <broadcast-modal />
+      <comments-modal btn-color="primary" :btn-variant="undefined" />
+      <broadcast-modal :pokemon-detail="pokemon" />
     </v-card-actions>
   </v-card>
 </template>
@@ -16,22 +16,25 @@ import { onMounted, ref } from 'vue'
 import type { PokemonDetails } from '@/interfaces/pokemon'
 import CommentsModal from './CommentsModal.vue';
 import BroadcastModal from './BroadcastModal.vue';
+import { getLikeByUser, getLikesByPokeId, setPokemonLike } from '@/services/likeApi';
 
 const props = defineProps<{ pokemon: PokemonDetails }>()
 const like = ref(false)
 const likesAmount = ref(0)
 
 onMounted(async () => {
-  const user = localStorage.getItem('username')
+  const user = localStorage.getItem('username') || 'Anónimo'
   //like del user actual
-  //like.value = await getLikeByUser(props.pokemon.id, user)
+  like.value = await getLikeByUser(props.pokemon.id, user)
   //cantidad de likes 
-  //likesAmount.value = await getLikes(props.pokemon.id)
+  likesAmount.value = await getLikesByPokeId(props.pokemon.id)
 })
 
-const onLike = (name: string) => {
+const onLike = async (name: string) => {
   like.value = !like.value
   likesAmount.value += like.value ? 1 : -1
+
+  await setPokemonLike(props.pokemon.id, like.value)
 }
 
 const capitalize = (str: string): string => {

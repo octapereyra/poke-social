@@ -5,8 +5,9 @@
     </template>
     <v-card prepend-icon="mdi-share-variant" title="Nueva difusión">
       <v-card-text>
-        <v-text-field v-model="broadcast.title" label="Título"></v-text-field>
-        <v-textarea v-model="broadcast.description" label="Descripción"></v-textarea>
+        <v-text-field v-model="broadcast.title" :rules="[rules.required]" label="Título"></v-text-field>
+        <v-textarea v-model="broadcast.description" :rules="[rules.required, rules.max]"
+          label="Descripción"></v-textarea>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -18,10 +19,16 @@
 </template>
 
 <script setup lang="ts">
+import type { Broadcast } from '@/interfaces/broadcast';
+import type { PokemonDetails } from '@/interfaces/pokemon';
+import rules from '@/utils/rules';
 import router from '@/router/router';
 import { ref, shallowRef } from 'vue';
 const dialog = shallowRef(false);
 
+const props = defineProps<{
+  pokemonDetail: PokemonDetails
+}>();
 const broadcast = ref();
 
 broadcast.value = {
@@ -30,7 +37,25 @@ broadcast.value = {
 }
 
 const onSubmit = () => {
-  console.log(broadcast.value);
+  if (!broadcast.value.title || !broadcast.value.description) return;
+  const newBroadcast: Broadcast = {
+    title: `Difusión sobre ${props.pokemonDetail.name} - ${broadcast.value.title}`,
+    description: broadcast.value.description,
+    pokemonId: Number.parseInt(props.pokemonDetail.id),
+    username: localStorage.getItem('username') || 'Anónimo',
+    createdAt: new Date(),
+    likes: 0,
+    dislikes: 0,
+    comments: [],
+  }
+
+  console.log(newBroadcast);
+
+  broadcast.value = {
+    title: '',
+    description: '',
+  }
+
   dialog.value = false;
 
   router.push('/broadcasts');

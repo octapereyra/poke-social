@@ -7,7 +7,7 @@ interface Pokemon {
 }
 
 interface PokemonDetails {
-  id: string
+  id: number
   name: string
   sprite: string
 }

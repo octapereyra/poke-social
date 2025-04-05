@@ -9,19 +9,17 @@
         <v-list-item-subtitle>{{ getDateTime(broadcast.createdAt) }}</v-list-item-subtitle>
         <template #append>
           <div class="justify-self-end">
-            <v-btn prepend-icon="mdi-thumb-up-outline" class="like-btn">{{ broadcast.likes }}</v-btn>
-            <v-btn prepend-icon="mdi-thumb-down-outline" class="like-btn">{{ broadcast.dislikes }}</v-btn>
+            <v-btn prepend-icon="mdi-thumb-up-outline" @click="onLike">{{ broadcast.likes }}</v-btn>
+            <v-btn prepend-icon="mdi-thumb-down-outline" @click="onDislike">{{ broadcast.dislikes }}</v-btn>
             <v-btn icon="mdi-message-text-outline" @click="showComments"></v-btn>
-            <v-btn v-if="checkCreationTime" icon="mdi-pencil-outline"></v-btn>
+            <v-btn v-if="checkCreationTime" icon="mdi-pencil-outline" @click=""></v-btn>
           </div>
         </template>
       </v-list-item>
     </v-card-actions>
   </v-card>
   <v-list v-if="commentActive">
-    <v-list-item v-for="comment in broadcast.comments" :key="comment.id">
-      <broadcast-comment :comment="comment"></broadcast-comment>
-    </v-list-item>
+    <broadcast-comments :comments="broadcast.comments"></broadcast-comments>
     <v-list-item>
       <v-text-field v-model="newComment" :rules="[rules.required, rules.max]"
         label="Escribe un comentario"></v-text-field>
@@ -35,16 +33,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type Broadcast from '@/interfaces/broadcast';
-import BroadcastComment from './BroadcastComment.vue';
+import type { Broadcast } from '@/interfaces/broadcast';
+import BroadcastComments from './BroadcastComments.vue';
+import rules from '@/utils/rules';
 
 const commentActive = ref(false)
 const newComment = ref('')
 
-const rules = {
-  required: (value: string) => !!value || 'Este campo es requerido',
-  max: (value: string) => value.length <= 500 || 'Máximo de 500 caracteres',
-}
 const broadcast: Broadcast = {
   id: "1",
   title: 'Charizard',
@@ -82,6 +77,10 @@ const addComment = () => {
   })
   newComment.value = ''
 }
+
+const onLike = () => broadcast.likes++
+const onDislike = () => broadcast.dislikes++
+
 
 const getDateTime = (date: Date) => {
   return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()

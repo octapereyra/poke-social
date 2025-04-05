@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import Layout from './Layout.vue';
-import { getPokemons } from '@/services/pokemonApi'
+import { getPokemons } from '@/services/pokeApi'
 import type { PokemonDetails } from '@/interfaces/pokemon';
 import pokemonCard from '@/components/PokemonCard.vue'
 import Sidebar from '@/components/Sidebar.vue';

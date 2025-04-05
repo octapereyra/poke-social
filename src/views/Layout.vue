@@ -28,7 +28,7 @@ const user = localStorage.getItem('username')
 const logout = () => {
   localStorage.removeItem('username')
   localStorage.removeItem('avatar')
-  router.push('/login')
+  router.replace('/login')
 }
 </script>
 
