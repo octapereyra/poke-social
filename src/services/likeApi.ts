@@ -26,10 +26,9 @@ const getLikesByPokeId = async (pokemonId: number): Promise<number> => {
   }
 }
 
-const setPokemonLike = async (id: number, liked: boolean): Promise<void> => {
+const setPokemonLike = async (id: number, isMocked: boolean, liked: boolean): Promise<void> => {
   try {
-    const pokemonsId = await getMockPokemonsByUser(localStorage.getItem('username') || '')
-    if (pokemonsId.includes(id)) {
+    if (isMocked) {
       await axios.put(`https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/${id}`, { liked })
     } else {
       await axios.post('https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon', {

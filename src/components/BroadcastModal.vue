@@ -41,7 +41,7 @@ const onSubmit = () => {
   const newBroadcast: Broadcast = {
     title: `Difusión sobre ${props.pokemonDetail.name} - ${broadcast.value.title}`,
     description: broadcast.value.description,
-    pokemonId: Number.parseInt(props.pokemonDetail.id),
+    pokemonId: props.pokemonDetail.id,
     username: localStorage.getItem('username') || 'Anónimo',
     createdAt: new Date(),
     likes: 0,
