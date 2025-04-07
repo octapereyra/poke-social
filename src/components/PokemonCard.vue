@@ -1,55 +1,55 @@
 <template>
-  <v-card :key="pokemon.name" variant="elevated" rounded="xl">
-    <v-img :src="pokemon.sprite" height="200"></v-img>
-    <v-card-title>{{ capitalize(pokemon.name) }}</v-card-title>
+  <v-card v-if="pokemonDetails" :key="pokemonId" variant="elevated" rounded="xl">
+    <v-img :src="pokemonDetails.sprite" height="200"></v-img>
+    <v-card-title>{{ capitalize(pokemonDetails.name) }}</v-card-title>
     <v-card-actions>
       <v-btn color="primary" :prepend-icon="like ? 'mdi-heart' : 'mdi-heart-outline'" @click="onLike()"
         class="like-btn">{{ likesAmount }}</v-btn>
-      <comments-modal btn-color="primary" :btn-variant="undefined" />
-      <broadcast-modal :pokemon-detail="pokemon" />
+      <comments-modal btn-color="primary" :btn-variant="undefined" :mock-id="mockId" />
+      <broadcast-modal :pokemon-detail="pokemonDetails" />
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import type { PokemonDetails } from '@/interfaces/pokemon'
+import { onMounted, ref } from 'vue'
 import CommentsModal from './CommentsModal.vue';
 import BroadcastModal from './BroadcastModal.vue';
 import { getLikeByUser, getLikesByPokeId, setPokemonLike } from '@/services/likeApi';
+import { getPokemon } from '@/services/pokeApi';
 
 const props = defineProps({
-  pokemon: {
-    type: Object as () => PokemonDetails,
+  pokemonId: {
+    type: Number,
     required: true
   },
-  isMocked: {
-    type: Boolean,
-    default: false
+  mockId: {
+    type: String,
+    required: true
   }
 })
+const pokemonDetails = ref<PokemonDetails>()
 const like = ref(false)
 const likesAmount = ref(0)
 
 onMounted(async () => {
+  pokemonDetails.value = await getPokemon(props.pokemonId)
+
   const user = localStorage.getItem('username') || 'Anónimo'
-  //like del user actual   
-  like.value = await getLikeByUser(props.pokemon.id, user)
-  //cantidad de likes 
-  likesAmount.value = await getLikesByPokeId(props.pokemon.id)
+  like.value = await getLikeByUser(props.pokemonId, user)
+  likesAmount.value = await getLikesByPokeId(props.pokemonId)
 })
 
 const onLike = async () => {
   like.value = !like.value
   likesAmount.value += like.value ? 1 : -1
-  console.log(props.pokemon.id, props.isMocked, like.value)
-  await setPokemonLike(props.pokemon.id, props.isMocked, like.value)
+  await setPokemonLike(props.mockId, like.value)
 }
 
 const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
-
 
 </script>
 

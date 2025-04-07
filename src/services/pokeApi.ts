@@ -26,17 +26,17 @@ const getPokemons = async (): Promise<PokemonDetails[]> => {
   }
 }
 
-const getPokemon = async (id: string): Promise<PokemonDetails | null> => {
+const getPokemon = async (id: number): Promise<PokemonDetails | undefined> => {
   try {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
     return {
-      id: parseInt(id, 10),
+      id: id,
       name: response.data.name,
       sprite: response.data.sprites.front_default,
     }
   } catch (error) {
     console.error('Error fetching Pokémon:', error)
-    return null
+    return undefined
   }
 }
 

@@ -39,28 +39,31 @@
 
 <script setup lang="ts">
 import type Commentary from '@/interfaces/commentary'
+import { setPokemonComment } from '@/services/commentApi';
 import rules from '@/utils/rules'
 import { ref } from 'vue'
 
 const props = defineProps<{
   btnColor: string,
   btnVariant: "flat" | "tonal" | "elevated" | undefined,
+  mockId: string,
 }>()
-const comments = ref([] as Commentary[])
-const newComment = ref()
 
-const addComment = () => {
+const comments = ref<Commentary[]>([])
+const newComment = ref()
+const username = localStorage.getItem('username') || 'Anónimo'
+
+const addComment = async () => {
   if (!newComment.value) return
   comments.value.push({
     id: comments.value.length + 1,
     avatar: localStorage.getItem('avatar') || 'https://cdn.vuetifyjs.com/images/john.jpg',
-    username: localStorage.getItem('username') || 'Anónimo',
+    username: username,
     text: newComment.value,
   })
+  await setPokemonComment(props.mockId, comments.value)
   newComment.value = ''
 }
-
-const username = localStorage.getItem('username')
 
 const onEdit = (id: number) => {
   const index = comments.value.findIndex((comment) => comment.id === id)

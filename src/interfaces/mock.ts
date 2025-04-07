@@ -1,14 +1,12 @@
-export default interface Mock {
+import type Commentary from './commentary'
+
+interface Mock {
+  id: string
   app: 'ojpapp'
   pokemonId: number
-  userId: string
+  username: string
   liked: boolean
-  comments?: [
-    {
-      id: string
-      text: string
-      userId: string
-      createdAt: string
-    },
-  ]
+  comments: Commentary[]
 }
+
+export type { Mock }

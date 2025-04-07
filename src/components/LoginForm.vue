@@ -23,17 +23,16 @@
 
 <script setup lang="ts">
 import router from '@/router/router'
+import { loadPokemons } from '@/services/mockApi'
 import rules from '@/utils/rules'
 import { ref } from 'vue'
 import type { VForm } from 'vuetify/components'
 
-// Estado reactivo
 const username = ref('')
 const avatar = ref('')
 const loading = ref(false)
 const form = ref<typeof VForm | null>(null)
 
-// Método de login
 const login = async () => {
   if (!form.value) return
 
@@ -42,9 +41,9 @@ const login = async () => {
   if (valid) {
     loading.value = true
     try {
-      // Aquí iría tu lógica de autenticación
       localStorage.setItem('username', username.value)
       localStorage.setItem('avatar', avatar.value)
+      await loadPokemons(username.value)
       router.push('/')
 
     } finally {
