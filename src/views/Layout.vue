@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <!-- Barra de navegación superior -->
     <v-app-bar app color="primary" dark>
       <v-toolbar-title>PokeSocial</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -17,11 +16,6 @@
 
 <script setup lang="ts">
 import router from '@/router/router'
-
-const links = [
-  'Sobre mí',
-  'Contactame',
-]
 
 const user = localStorage.getItem('username')
 

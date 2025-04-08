@@ -24,6 +24,7 @@ import type { PokemonDetails } from '@/interfaces/pokemon';
 import rules from '@/utils/rules';
 import router from '@/router/router';
 import { ref, shallowRef } from 'vue';
+import { setBroadcast } from '@/services/collabChatApi';
 const dialog = shallowRef(false);
 
 const props = defineProps<{
@@ -36,7 +37,7 @@ broadcast.value = {
   description: '',
 }
 
-const onSubmit = () => {
+const onSubmit = async () => {
   if (!broadcast.value.title || !broadcast.value.description) return;
   const newBroadcast: Broadcast = {
     title: `Difusión sobre ${props.pokemonDetail.name} - ${broadcast.value.title}`,
@@ -49,15 +50,18 @@ const onSubmit = () => {
     comments: [],
   }
 
-  console.log(newBroadcast);
-
   broadcast.value = {
     title: '',
     description: '',
   }
-
   dialog.value = false;
 
+  try {
+    await setBroadcast(newBroadcast);
+  } catch (error) {
+    alert('Error al crear la difusión');
+    return;
+  }
   router.push('/broadcasts');
 }
 

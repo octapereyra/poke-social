@@ -5,7 +5,7 @@
     <template #append>
       <v-btn prepend-icon="mdi-thumb-up-outline" variant="flat">{{ comment.likes }}</v-btn>
       <v-btn prepend-icon="mdi-thumb-down-outline" variant="flat">{{ comment.dislikes }}</v-btn>
-      <comments-modal btn-color="" btn-variant="flat"></comments-modal>
+      <comments-modal btn-color="" btn-variant="flat" :comments="[]" :mock-id="'1'"></comments-modal>
     </template>
   </v-list-item>
 </template>

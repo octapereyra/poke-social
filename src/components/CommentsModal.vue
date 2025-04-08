@@ -41,17 +41,22 @@
 import type Commentary from '@/interfaces/commentary'
 import { setPokemonComment } from '@/services/commentApi';
 import rules from '@/utils/rules'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
   btnColor: string,
   btnVariant: "flat" | "tonal" | "elevated" | undefined,
   mockId: string,
+  comments: Commentary[],
 }>()
 
 const comments = ref<Commentary[]>([])
 const newComment = ref()
 const username = localStorage.getItem('username') || 'Anónimo'
+
+onMounted(() => {
+  comments.value = props.comments
+})
 
 const addComment = async () => {
   if (!newComment.value) return
@@ -65,15 +70,16 @@ const addComment = async () => {
   newComment.value = ''
 }
 
-const onEdit = (id: number) => {
+const onEdit = async (id: number) => {
   const index = comments.value.findIndex((comment) => comment.id === id)
   newComment.value = comments.value[index].text
   comments.value.splice(index, 1)
 }
 
-const onDelete = (id: number) => {
+const onDelete = async (id: number) => {
   const index = comments.value.findIndex((comment) => comment.id === id)
   comments.value.splice(index, 1)
+  await setPokemonComment(props.mockId, comments.value)
 }
 
 

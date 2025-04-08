@@ -7,8 +7,7 @@
         <p class="text-center">Aquí podrás ver, dar like y comentar tus pokemones favoritos</p>
       </v-container>
       <v-container class="card-container">
-        <pokemon-card v-for="mp in mockPokemons" :key="mp.id" :pokemon-id="mp.pokemonId"
-          :mock-id="mp.id"></pokemon-card>
+        <pokemon-card v-for="mp in mockPokemons" :key="mp.id" :mock="mp"></pokemon-card>
       </v-container>
     </v-main>
   </Layout>
