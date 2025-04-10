@@ -1,5 +1,6 @@
 interface Broadcast {
   id?: string
+  app: 'ojpapp'
   title: string
   description: string
   pokemonId: number

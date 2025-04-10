@@ -1,6 +1,5 @@
 <template>
   <Layout>
-    <Sidebar></Sidebar>
     <v-main>
       <v-container>
         <h1 class="text-center">Difusiones</h1>
@@ -8,6 +7,8 @@
       </v-container>
       <v-container>
         <broadcast-card v-for="bc in broadcasts" :broadcast="bc"></broadcast-card>
+        <v-alert v-if="broadcasts.length === 0 && !loading" text="No hay difusiones disponibles" title="Información"
+          type="info" variant="tonal"></v-alert>
       </v-container>
     </v-main>
   </Layout>
@@ -15,19 +16,26 @@
 
 <script setup lang="ts">
 import Layout from './Layout.vue';
-import Sidebar from '@/components/Sidebar.vue';
-import BroadcastCard from '@/components/BroadcastCard.vue';
+import BroadcastCard from '@/components/cards/BroadcastCard.vue';
 import { onMounted, ref } from 'vue';
 import type { Broadcast } from '@/interfaces/broadcast';
 import { getBroadcasts } from '@/services/collabChatApi';
 
 const broadcasts = ref<Broadcast[]>([])
+const loading = ref(true)
 
 onMounted(async () => {
   try {
-    broadcasts.value = (await getBroadcasts())
+    broadcasts.value = await getBroadcasts()
   } catch (error) {
-    alert('Error al cargar las difusiones')
+    if (error instanceof Error) {
+      broadcasts.value = []
+    } else {
+      alert('Error al cargar las difusiones')
+    }
+  }
+  finally {
+    loading.value = false
   }
 })
 

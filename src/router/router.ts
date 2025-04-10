@@ -1,4 +1,4 @@
-import Index from '@/views/Index.vue'
+import Index from '@/views/Pokemons.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({

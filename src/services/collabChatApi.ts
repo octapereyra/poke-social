@@ -1,12 +1,15 @@
-import type { Broadcast } from '@/interfaces/broadcast'
+import type { Broadcast, BroadcastComment } from '@/interfaces/broadcast'
 import axios from 'axios'
 
 const getBroadcasts = async (): Promise<Broadcast[]> => {
   try {
-    const { data } = await axios.get<Broadcast[]>(
-      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/collab-chat?username=test12`,
+    const data = await axios.get<Broadcast[]>(
+      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/collab-chat?app=ojpapp`,
     )
-    return data
+    if (data.status === 404) {
+      throw new Error('No se encontraron difusiones')
+    }
+    return data.data
   } catch (error) {
     throw new Error('Error al obtener difusiones: ' + error)
   }
@@ -20,10 +23,10 @@ const setBroadcast = async (broadcast: Broadcast): Promise<void> => {
   }
 }
 
-const editBroadcast = async (id: string, broadcast: Broadcast): Promise<void> => {
+const editBroadcast = async (broadcast: Broadcast): Promise<void> => {
   try {
     await axios.put(
-      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/collab-chat/${id}`,
+      `https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/collab-chat/${broadcast.id}`,
       broadcast,
     )
   } catch (error) {
@@ -31,4 +34,14 @@ const editBroadcast = async (id: string, broadcast: Broadcast): Promise<void> =>
   }
 }
 
-export { setBroadcast, getBroadcasts, editBroadcast }
+const editBroadcastComments = async (id: string, comments: BroadcastComment[]): Promise<void> => {
+  try {
+    await axios.put(`https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/collab-chat/${id}`, {
+      comments,
+    })
+  } catch (error) {
+    throw new Error('Error al editar comentarios de difusión: ' + error)
+  }
+}
+
+export { setBroadcast, getBroadcasts, editBroadcast, editBroadcastComments }

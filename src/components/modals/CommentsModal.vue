@@ -10,7 +10,7 @@
         <v-card-text>
           <v-list lines="two">
             <v-list-item v-for="comment in comments" :key="comment.id" :title="comment.username" variant="elevated"
-              base-color="yellow" rounded="xl" class="my-1">
+              base-color="blue-lighten-4" rounded="xl" class="my-1">
               <template #prepend>
                 <v-avatar>
                   <v-img :src="comment.avatar"></v-img>

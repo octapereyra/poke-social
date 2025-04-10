@@ -1,6 +1,5 @@
 <template>
   <Layout>
-    <Sidebar></Sidebar>
     <v-main>
       <v-container>
         <h1 class="text-center">Bienvenido a PokeSocial </h1>
@@ -17,15 +16,19 @@
 import { onMounted, ref } from 'vue'
 import { getMockPokemonsByUser } from '@/services/mockApi';
 import Layout from './Layout.vue';
-import pokemonCard from '@/components/PokemonCard.vue'
-import Sidebar from '@/components/Sidebar.vue';
+import PokemonCard from '@/components/cards/PokemonCard.vue';
 import type { Mock } from '@/interfaces/mock';
 
 const mockPokemons = ref<Mock[]>([])
 
 onMounted(async () => {
   const username = localStorage.getItem('username') || 'Anónimo'
-  mockPokemons.value = await getMockPokemonsByUser(username)
+  try {
+    mockPokemons.value = await getMockPokemonsByUser(username)
+  }
+  catch (error) {
+    alert('Error al cargar los pokemones')
+  }
 })
 
 </script>
