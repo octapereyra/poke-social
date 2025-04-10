@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getMockPokemonsByUser } from '@/services/mockApi';
+import { getMockPokemons } from '@/services/mockApi';
 import Layout from './Layout.vue';
 import PokemonCard from '@/components/cards/PokemonCard.vue';
 import type { Mock } from '@/interfaces/mock';
@@ -24,12 +24,13 @@ const mockPokemons = ref<Mock[]>([])
 onMounted(async () => {
   const username = localStorage.getItem('username') || 'Anónimo'
   try {
-    mockPokemons.value = await getMockPokemonsByUser(username)
+    mockPokemons.value = await getMockPokemons()
   }
   catch (error) {
     alert('Error al cargar los pokemones')
   }
-})
+}
+)
 
 </script>
 

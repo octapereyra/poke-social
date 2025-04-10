@@ -1,10 +1,10 @@
 import type { Mock } from '@/interfaces/mock'
 import axios from 'axios'
 
-const getMockPokemonsByUser = async (username: string): Promise<Mock[]> => {
+const getMockPokemons = async (): Promise<Mock[]> => {
   try {
     const response = await axios.get<Mock[]>(
-      'https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon?app=ojpapp&username=' + username,
+      'https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon?app=ojpapp',
     )
     return response.data
   } catch (error) {
@@ -12,18 +12,23 @@ const getMockPokemonsByUser = async (username: string): Promise<Mock[]> => {
   }
 }
 
-const loadPokemons = async (username: string): Promise<void> => {
-  const existingPokemons = await getMockPokemonsByUser(username)
+const loadPokemons = async (): Promise<void> => {
+  let existingPokemons: Mock[] = []
+  try {
+    existingPokemons = await getMockPokemons()
+  } catch (error) {
+    console.log(error)
+  }
+
   if (existingPokemons.length > 0) return
   else {
     try {
       let pokemon = {}
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 16; i++) {
         pokemon = {
           app: 'ojpapp',
           pokemonId: i,
-          username: username,
-          liked: false,
+          likes: [],
           comments: [],
         }
         await axios.post('https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/', pokemon)
@@ -34,4 +39,4 @@ const loadPokemons = async (username: string): Promise<void> => {
   }
 }
 
-export { getMockPokemonsByUser, loadPokemons }
+export { getMockPokemons, loadPokemons }

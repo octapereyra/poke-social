@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height justify-center">
+  <v-container class="justify-center">
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="pa-8">
@@ -9,8 +9,8 @@
           <v-form @submit.prevent="login" ref="form">
             <v-text-field v-model="username" label="Nombre de usuario" type="text" :rules="[rules.usernameValidation]"
               required variant="outlined" class="mb-4"></v-text-field>
-            <v-text-field v-model="avatar" label="Avatar" type="text" :rules="[rules.avatarValidation]" required
-              variant="outlined" class="mb-6"></v-text-field>
+            <v-text-field v-model="avatar" label="Avatar (enlace de la imágen)" type="text"
+              :rules="[rules.avatarValidation]" required variant="outlined" class="mb-6"></v-text-field>
             <v-btn type="submit" color="primary" block size="large" :disabled="loading">
               Ingresar
             </v-btn>
@@ -43,10 +43,14 @@ const login = async () => {
     try {
       localStorage.setItem('username', username.value)
       localStorage.setItem('avatar', avatar.value)
-      await loadPokemons(username.value)
+      await loadPokemons()
       router.push('/')
 
-    } finally {
+    }
+    catch {
+      alert('Ha ocurrido un error en el servidor, por favor intenta más tarde.')
+    }
+    finally {
       loading.value = false
     }
   }

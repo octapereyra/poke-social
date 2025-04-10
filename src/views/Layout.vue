@@ -11,7 +11,7 @@
         </template>
         {{ user }}
       </v-btn>
-      <v-btn text="Cerrar sesión" @click="logout">
+      <v-btn :text="$vuetify.display.mobile ? '' : 'Cerrar sesión'" @click="logout">
         <template #prepend>
           <v-icon>mdi-exit-to-app</v-icon>
         </template>

@@ -4,7 +4,7 @@ import axios from 'axios'
 const getPokemons = async (): Promise<PokemonDetails[]> => {
   try {
     const response = await axios.get<{ results: Pokemon[] }>(
-      'https://pokeapi.co/api/v2/pokemon?limit=10',
+      'https://pokeapi.co/api/v2/pokemon?limit=16',
     )
     const pokemonList = response.data.results
 
@@ -15,6 +15,7 @@ const getPokemons = async (): Promise<PokemonDetails[]> => {
           id: parseInt(pokemon.url.split('/')[6], 10),
           name: details.data.name,
           sprite: details.data.sprites.front_default,
+          type: details.data.types.map((type: { type: { name: string } }) => type.type.name),
         }
       }),
     )
@@ -33,6 +34,7 @@ const getPokemon = async (id: number): Promise<PokemonDetails | undefined> => {
       id: id,
       name: response.data.name,
       sprite: response.data.sprites.front_default,
+      type: response.data.types.map((type: { type: { name: string } }) => type.type.name),
     }
   } catch (error) {
     console.error('Error fetching Pokémon:', error)

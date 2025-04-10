@@ -4,8 +4,7 @@ interface Mock {
   id: string
   app: 'ojpapp'
   pokemonId: number
-  username: string
-  liked: boolean
+  likes: string[]
   comments: Commentary[]
 }
 

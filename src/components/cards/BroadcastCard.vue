@@ -14,7 +14,7 @@
             <v-btn :prepend-icon="dislike ? 'mdi-thumb-down' : 'mdi-thumb-down-outline'" @click="onDislike">{{
               broadcast.dislikes }}</v-btn>
             <v-btn icon="mdi-message-text-outline" @click="showComments"></v-btn>
-            <broadcast-modal v-if="checkCreationTime" :modal-option="'edit'"
+            <broadcast-modal v-if="checkCreationTime && checkUser" :modal-option="'edit'"
               :editing-broadcast="broadcast"></broadcast-modal>
           </div>
         </template>
@@ -95,6 +95,7 @@ const onDislike = async () => {
 }
 
 const checkCreationTime = new Date().getTime() - new Date(props.broadcast.createdAt).getTime() < 3600000
+const checkUser = localStorage.getItem('username') === props.broadcast.username
 
 </script>
 
