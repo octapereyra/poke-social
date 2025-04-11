@@ -17,7 +17,7 @@ const loadPokemons = async (): Promise<void> => {
   try {
     existingPokemons = await getMockPokemons()
   } catch (error) {
-    console.log(error)
+    throw new Error('Error fetching existing Pokémon: ' + error)
   }
 
   if (existingPokemons.length > 0) return

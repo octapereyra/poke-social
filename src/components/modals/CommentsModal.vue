@@ -79,7 +79,12 @@ const onEdit = async (id: number) => {
 const onDelete = async (id: number) => {
   const index = comments.value.findIndex((comment) => comment.id === id)
   comments.value.splice(index, 1)
-  await setPokemonComment(props.mockId, comments.value)
+  try {
+    await setPokemonComment(props.mockId, comments.value)
+  }
+  catch (error) {
+    alert('Error al eliminar el comentario')
+  }
 }
 
 

@@ -9,8 +9,7 @@ const getPokemonComment = async (id: string): Promise<Commentary[]> => {
     )
     return data[0].comments
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
-    return []
+    throw new Error('Error al obtener los comentarios del pokemon')
   }
 }
 
@@ -20,7 +19,7 @@ const setPokemonComment = async (id: string, comments: Commentary[]): Promise<vo
       comments,
     })
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
+    throw new Error('Error al guardar el comentario del pokemon')
   }
 }
 

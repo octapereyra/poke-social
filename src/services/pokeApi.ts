@@ -22,8 +22,7 @@ const getPokemons = async (): Promise<PokemonDetails[]> => {
 
     return detailedPokemons
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
-    return []
+    throw new Error('Error fetching Pokémon: ' + error)
   }
 }
 
@@ -37,8 +36,7 @@ const getPokemon = async (id: number): Promise<PokemonDetails | undefined> => {
       type: response.data.types.map((type: { type: { name: string } }) => type.type.name),
     }
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
-    return undefined
+    throw new Error('Error fetching Pokémon: ' + error)
   }
 }
 

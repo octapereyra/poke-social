@@ -8,8 +8,7 @@ const getLikeByUser = async (pokemonId: number, username: string): Promise<boole
     )
     return response.data[0].likes.includes(username)
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
-    return false
+    throw new Error('Error al obtener los likes del pokemon')
   }
 }
 
@@ -20,8 +19,7 @@ const getLikesByPokeId = async (pokemonId: number): Promise<number> => {
     )
     return response.data[0].likes.length
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
-    return 0
+    throw new Error('Error al obtener los likes del pokemon')
   }
 }
 
@@ -42,7 +40,7 @@ const setPokemonLike = async (id: string, liked: boolean, username: string): Pro
     }
     await axios.put(`https://67d81f029d5e3a10152d7c98.mockapi.io/api/v1/pokemon/${id}`, { likes })
   } catch (error) {
-    console.error('Error fetching Pokémon:', error)
+    throw new Error('Error al guardar el like del pokemon')
   }
 }
 

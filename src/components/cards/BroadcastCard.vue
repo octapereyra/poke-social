@@ -5,15 +5,18 @@
     <v-card-text>{{ broadcast.description }}</v-card-text>
     <v-card-actions>
       <v-list-item class="w-100">
-        <v-list-item-title class="comment-author">Creado por {{ broadcast.username }}</v-list-item-title>
+        <v-list-item-title class="comment-author">Creada por {{ broadcast.username }}</v-list-item-title>
         <v-list-item-subtitle>{{ getDateTime(new Date(broadcast.createdAt)) }}</v-list-item-subtitle>
         <template #append>
           <div class="justify-self-end">
-            <v-btn :prepend-icon="like ? ' mdi-thumb-up' : 'mdi-thumb-up-outline'" @click="onLike">{{ broadcast.likes
-            }}</v-btn>
-            <v-btn :prepend-icon="dislike ? 'mdi-thumb-down' : 'mdi-thumb-down-outline'" @click="onDislike">{{
-              broadcast.dislikes }}</v-btn>
-            <v-btn icon="mdi-message-text-outline" @click="showComments"></v-btn>
+            <v-btn :prepend-icon="liked ? ' mdi-thumb-up' : 'mdi-thumb-up-outline'"
+              :disabled="checkUser || !likeEnabled" @click="onLike">{{
+                broadcast.likes
+              }}</v-btn>
+            <v-btn :prepend-icon="disliked ? 'mdi-thumb-down' : 'mdi-thumb-down-outline'"
+              :disabled="checkUser || !dislikeEnabled" @click="onDislike">{{
+                broadcast.dislikes }}</v-btn>
+            <v-btn icon="mdi-message-text-outline" :active="commentActive" @click="showComments"></v-btn>
             <broadcast-modal v-if="checkCreationTime && checkUser" :modal-option="'edit'"
               :editing-broadcast="broadcast"></broadcast-modal>
           </div>
@@ -22,7 +25,7 @@
     </v-card-actions>
   </v-card>
   <v-list v-if="commentActive">
-    <broadcast-comments :comments="broadcast.comments"></broadcast-comments>
+    <broadcast-comments :broadcast-id="broadcast.id || '0'" :comments="broadcast.comments"></broadcast-comments>
     <comment-input @add-comment="addComment"></comment-input>
   </v-list>
 
@@ -38,8 +41,11 @@ import BroadcastComments from '../BroadcastComments.vue';
 import BroadcastModal from '../modals/BroadcastModal.vue';
 
 const commentActive = ref(false)
-const like = ref(false)
-const dislike = ref(false)
+const liked = ref(false)
+const disliked = ref(false)
+const likeEnabled = ref(true)
+const dislikeEnabled = ref(true)
+const username = localStorage.getItem('username') || 'Anónimo'
 
 const props = defineProps<{
   broadcast: Broadcast
@@ -52,7 +58,7 @@ const showComments = () => {
 const addComment = async (commentText: string) => {
   props.broadcast.comments.push({
     id: (props.broadcast.comments.length + 1).toString(),
-    username: localStorage.getItem('username') || 'Anónimo',
+    username: username,
     text: commentText,
     createdAt: new Date(),
     likes: 0,
@@ -70,8 +76,10 @@ const addComment = async (commentText: string) => {
 }
 
 const onLike = async () => {
-  like.value = !like.value
-  props.broadcast.likes += like.value ? 1 : -1
+  liked.value = !liked.value
+  dislikeEnabled.value = !dislikeEnabled.value
+
+  props.broadcast.likes += liked.value ? 1 : -1
   if (props.broadcast.id) {
     await editBroadcast({
       ...props.broadcast,
@@ -82,12 +90,14 @@ const onLike = async () => {
   }
 }
 const onDislike = async () => {
-  dislike.value = !dislike.value
-  props.broadcast.dislikes += dislike.value ? 1 : -1
+  disliked.value = !disliked.value
+  likeEnabled.value = !likeEnabled.value
+
+  props.broadcast.dislikes += disliked.value ? 1 : -1
   if (props.broadcast.id) {
     await editBroadcast({
       ...props.broadcast,
-      likes: props.broadcast.likes,
+      dislikes: props.broadcast.dislikes,
     })
   } else {
     alert('Error al editar la difusión')
